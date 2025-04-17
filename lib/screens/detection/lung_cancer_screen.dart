@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mediscope/screens/home_screen.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class LungcancerDetectionPage extends StatefulWidget {
-  const LungcancerDetectionPage({Key? key}) : super(key: key);
+  const LungcancerDetectionPage({super.key});
 
   @override
   State<LungcancerDetectionPage> createState() => _LungcancerDetectionPage();
@@ -30,7 +30,7 @@ class _LungcancerDetectionPage extends State<LungcancerDetectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0), // Hides the app bar
+        preferredSize: const Size.fromHeight(0), // Hides the app bar
         child: Container(),
       ),
       body: Stack(
@@ -52,13 +52,13 @@ class _LungcancerDetectionPage extends State<LungcancerDetectionPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeScreen(), // Navigate to Home screen
+                          builder: (context) =>  HomeScreen(controller: PersistentTabController(initialIndex: 0)), // Navigate to Home screen
                         ),
                       );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.blueGrey,
                       ),
@@ -91,7 +91,7 @@ class _LungcancerDetectionPage extends State<LungcancerDetectionPage> {
                 onPressed: _uploadImage,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF272733),
-                  minimumSize: Size(200, 50), // Same width and height for the button
+                  minimumSize: const Size(200, 50), // Same width and height for the button
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -109,7 +109,7 @@ class _LungcancerDetectionPage extends State<LungcancerDetectionPage> {
                 onPressed: _predictOutput,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF333242),
-                  minimumSize: Size(200, 50), // Same width and height for the button
+                  minimumSize: const Size(200, 50), // Same width and height for the button
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

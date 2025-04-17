@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mediscope/screens/detection/brain_tumor_screen.dart';
 import 'package:mediscope/screens/detection/lung_cancer_screen.dart';
 import 'package:mediscope/screens/detection/skin_cancer_screen.dart';
@@ -8,11 +11,102 @@ import 'package:mediscope/widgets/DetectionCard.dart';
 import 'package:mediscope/widgets/HealthCalculator.dart';
 import 'package:mediscope/widgets/LungCancerWidget.dart';
 import 'package:mediscope/widgets/SkinCancerWidget.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final PersistentTabController controller;
+  const HomeScreen({super.key, required this.controller});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool hasProfileData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkProfileDetails();
+  }
+
+  Future<void> checkProfileDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final data = doc.data();
+
+      final name = data?['name'];
+      final email = data?['email'];
+
+      if (name == null || name.toString().isEmpty || email == null || email.toString().isEmpty) {
+        setState(() => hasProfileData = false);
+        showProfileReminderPopup();
+      }
+    }
+  }
+
+  void showProfileReminderPopup() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animation/profile_warning.json',
+                width: 180,
+                height: 180,
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "Profile Incomplete!",
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Please complete your profile details to use this app properly.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF864A17),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop(); // ✅ Close the popup first
+                  Future.delayed(Duration(milliseconds: 300), () {
+                    widget.controller.jumpToTab(3); // ✅ Then jump to Profile tab
+                  });
+                },
+                child: Text(
+                  "Go to Profile",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get the current hour to decide the greeting
     int currentHour = DateTime.now().hour;
     String greeting = '';
     String description = '';
@@ -37,11 +131,9 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Greeting Message and Logo
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Greeting message and description on the left
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -50,34 +142,32 @@ class HomeScreen extends StatelessWidget {
                           style: GoogleFonts.poppins(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF864A17),
+                            color: const Color(0xFF864A17),
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           description,
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF47484F),
+                            color: const Color(0xFF47484F),
                           ),
                         ),
                       ],
                     ),
-
-                    // Logo inside a circle on the right
                     Container(
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Color(0xFF8E97FD), // Circle color
+                        color: const Color(0xFF8E97FD),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.3),
                             spreadRadius: 1,
                             blurRadius: 2,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -91,9 +181,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 50), // Space between greeting and card
-
-                // Detection Card with left and right padding
+                const SizedBox(height: 50),
                 DetectionCard(
                   title: 'Brain Tumor',
                   subtitle: 'Detection',
@@ -101,61 +189,42 @@ class HomeScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => BrainTumorDetectionPage(), // Replace with actual widget
-                      ),
+                      MaterialPageRoute(builder: (context) => const BrainTumorDetectionPage()),
                     );
                   },
                 ),
-
-                SizedBox(height: 20), // Space between the detection card and health calculator
-
-                // Health Calculator widget
-                HealthCalculatorWidget(),
-
-                SizedBox(height: 20),
-
-                // Row to display both Skin Cancer and Lung Cancer widgets side by side
+                const SizedBox(height: 20),
+                const HealthCalculatorWidget(),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Skin Cancer Detection Widget
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          // Handle tap action for Skin Cancer Detection
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => SkinCancerDetectionPage(), // Replace with the actual page for Skin Cancer Detection
-                            ),
+                            MaterialPageRoute(builder: (context) => const SkinCancerDetectionPage()),
                           );
                         },
-                        child: SkinCancerDetectionWidget(),
+                        child: const SkinCancerDetectionWidget(),
                       ),
                     ),
-
-                    // Lung Cancer Detection Widget
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          // Handle tap action for Lung Cancer Detection
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => LungcancerDetectionPage(), // Replace with the actual page for Lung Cancer Detection
-                            ),
+                            MaterialPageRoute(builder: (context) => const LungcancerDetectionPage()),
                           );
                         },
-                        child: LungCancerDetectionWidget(),
+                        child: const LungCancerDetectionWidget(),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20), // Space between the detection card and health calculator
-
-                // Covid Disease Detection widget
-                Coviddiseasedetection(),
+                const SizedBox(height: 20),
+                const Coviddiseasedetection(),
               ],
             ),
           ),

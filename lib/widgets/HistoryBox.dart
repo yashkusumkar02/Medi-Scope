@@ -5,9 +5,9 @@ class HistoryBox extends StatelessWidget {
   final Map<String, Map<String, dynamic>> detectionDetails;
 
   const HistoryBox({
-    Key? key,
+    super.key,
     required this.detectionDetails,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class HistoryBox extends StatelessWidget {
                   const Divider(thickness: 1, height: 24), // Divider between parts
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

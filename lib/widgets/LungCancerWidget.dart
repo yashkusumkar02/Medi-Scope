@@ -4,7 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 class LungCancerDetectionWidget extends StatelessWidget {
   final String title = 'Lung Cancer';
   final String subtitle = 'Detection';
-  final String backgroundImagePath = 'assets/images/lung_cancer_background.png'; // Set your image path
+  final String backgroundImagePath = 'assets/images/lung_cancer_background.png';
+
+  const LungCancerDetectionWidget({super.key}); // Set your image path
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +29,12 @@ class LungCancerDetectionWidget extends StatelessWidget {
               color: Colors.black.withOpacity(0.25), // Shadow color
               spreadRadius: 1, // Spread the shadow
               blurRadius: 2, // Blur radius to soften the shadow
-              offset: Offset(0, 3), // Offset for shadow position (downward)
+              offset: const Offset(0, 3), // Offset for shadow position (downward)
             ),
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +47,7 @@ class LungCancerDetectionWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 subtitle,
                 style: GoogleFonts.poppins(
@@ -57,8 +59,8 @@ class LungCancerDetectionWidget extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    backgroundColor: Color(0xFF47484F),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    backgroundColor: const Color(0xFF47484F),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),

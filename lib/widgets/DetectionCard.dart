@@ -7,7 +7,7 @@ class DetectionCard extends StatelessWidget {
   final String backgroundImagePath;
   final VoidCallback onTap; // Add onTap callback for navigation
 
-  const DetectionCard({
+  const DetectionCard({super.key, 
     required this.title,
     required this.subtitle,
     required this.backgroundImagePath,
@@ -36,7 +36,7 @@ class DetectionCard extends StatelessWidget {
                 color: Colors.black.withOpacity(0.25),
                 spreadRadius: 1,
                 blurRadius: 2,
-                offset: Offset(0, 3), // Offset for shadow position
+                offset: const Offset(0, 3), // Offset for shadow position
               ),
             ],
           ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mediscope/screens/home_screen.dart';
 import 'package:mediscope/widgets/BottomNavBar.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Getting screen width and height using MediaQuery
@@ -13,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
       body: Container(
         width: screenWidth,
         height: screenHeight,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/welcomescreen.png'), // Replace with your background image path
             fit: BoxFit.cover,
@@ -28,7 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100), // Space from top of the screen
+                  const SizedBox(height: 100), // Space from top of the screen
 
                   // Welcome Text
                   Text(
@@ -39,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   // Subtext
                   Text(
@@ -50,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Description Text
                   Padding(
@@ -74,30 +77,29 @@ class WelcomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 70.0), // Padding from the bottom
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => BottomNavScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+                        (Route<dynamic> route) => false,
                   );
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                  foregroundColor: MaterialStateProperty.all(Color(0xFF864A17)), // Text color
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(Colors.white),
+                  foregroundColor: WidgetStateProperty.all(const Color(0xFF864A17)), // Text color
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(horizontal: 80, vertical: 10)),
+                  padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 80, vertical: 10)),
                 ),
                 child: Text(
                   'Get Started',
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF864A17),
+                    color: const Color(0xFF864A17),
                   ),
                 ),
               ),

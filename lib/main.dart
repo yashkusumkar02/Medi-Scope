@@ -1,24 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mediscope/screens/detection/brain_tumor_screen.dart';
-import 'package:mediscope/screens/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mediscope/screens/splash_screen.dart';
+import 'package:mediscope/widgets/BottomNavBar.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Hide the status bar and navigation bar globally across the app
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
-  // Run the app
-  runApp(MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BrainTumorDetectionPage(),  // Home screen as the starting point
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return const BottomNavScreen();
+          }
+          return const SplashScreen();
+        },
+      ),
     );
   }
 }

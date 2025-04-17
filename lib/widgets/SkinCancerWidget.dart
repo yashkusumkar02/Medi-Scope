@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mediscope/screens/detection/skin_cancer_screen.dart';
 
 class SkinCancerDetectionWidget extends StatelessWidget {
   final String title = 'Skin Cancer';
   final String subtitle = 'Detection';
-  final String backgroundImagePath = 'assets/images/skin_cancer_background.png'; // Set your image path
+  final String backgroundImagePath = 'assets/images/skin_cancer_background.png';
+
+  const SkinCancerDetectionWidget({super.key}); // Set your image path
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +30,12 @@ class SkinCancerDetectionWidget extends StatelessWidget {
               color: Colors.black.withOpacity(0.25), // Shadow color
               spreadRadius: 1, // Spread the shadow
               blurRadius: 2, // Blur radius to soften the shadow
-              offset: Offset(0, 3), // Offset for shadow position (downward)
+              offset: const Offset(0, 3), // Offset for shadow position (downward)
             ),
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +48,7 @@ class SkinCancerDetectionWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 subtitle,
                 style: GoogleFonts.poppins(
@@ -57,14 +60,18 @@ class SkinCancerDetectionWidget extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    backgroundColor: Color(0xFF47484F),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    backgroundColor: const Color(0xFF47484F),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   onPressed: () {
                     // Handle button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SkinCancerDetectionPage()),
+                    );
                   },
                   child: Text(
                     'GO',
